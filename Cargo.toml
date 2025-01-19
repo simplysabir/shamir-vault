@@ -1,10 +1,10 @@
 [package]
 name = "shamir-vault"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 authors = ["Sabir Khan <simplysabir@gmail.com>"]
 license = "MIT"
-description = "A Rust implementation of Shamir's Secret Sharing algorithm"
+description = "A Rust Crate implementation of Shamir's Secret Sharing algorithm"
 repository = "https://github.com/simplysabir/shamir-vault"
 readme = "README.md"
 homepage = "https://github.com/simplysabir/shamir-vault"
