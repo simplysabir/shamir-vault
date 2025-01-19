@@ -9,7 +9,6 @@ repository = "https://github.com/simplysabir/shamir-vault"
 readme = "README.md"
 homepage = "https://github.com/simplysabir/shamir-vault"
 keywords = ["cryptography", "shamir-secret", "shamir", "algorithm"]
-categories = ["shamir-secret", "algorithm"]
 
 [dependencies]
 rand = "0.8.5"
