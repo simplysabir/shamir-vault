@@ -1,0 +1,16 @@
+[package]
+name = "shamir-vault"
+version = "0.1.0"
+edition = "2021"
+authors = ["Sabir Khan <simplysabir@gmail.com>"]
+license = "MIT"
+description = "A Rust implementation of Shamir's Secret Sharing algorithm"
+repository = "https://github.com/simplysabir/shamir-vault"
+readme = "README.md"
+homepage = "https://github.com/simplysabir/shamir-vault"
+keywords = ["cryptography", "shamir-secret", "shamir", "algorithm"]
+categories = ["crate", "secret-sharing", "algorithm"]
+
+[dependencies]
+rand = "0.8.5"
+thiserror = "1.0"
