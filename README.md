@@ -1,4 +1,4 @@
-# shamir-vault
+# Shamir Vault
 
 `shamir-vault` is a Rust crate that provides an implementation of Shamir's Secret Sharing algorithm, enabling secure splitting and reconstruction of secrets. This crate allows you to divide a secret into multiple shares and reconstruct it with a minimum threshold of shares, ensuring data security and redundancy.
 
