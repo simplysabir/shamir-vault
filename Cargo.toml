@@ -11,5 +11,8 @@ homepage = "https://github.com/simplysabir/shamir-vault"
 keywords = ["cryptography", "shamir-secret", "shamir", "algorithm"]
 
 [dependencies]
+rand = {version="0.8.5",default-features=false}
+thiserror = { version = "1.0", default-features = false }
+
+[dev-dependencies]
 rand = "0.8.5"
-thiserror = "1.0"
