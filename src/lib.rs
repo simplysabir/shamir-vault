@@ -1,6 +1,10 @@
-use rand::{thread_rng, RngCore};
+#![no_std]
+extern crate alloc;
+use alloc::{collections::btree_set::BTreeSet, vec};
+use alloc::vec::Vec;
+use rand::{ RngCore};
 use thiserror::Error;
-
+use core as std;
 #[derive(Debug, Error)]
 pub enum ShamirError {
     #[error("shares must be between 2 and 255")]
@@ -122,9 +126,9 @@ fn interpolate_polynomial(x_samples: &[u8], y_samples: &[u8], x: u8) -> u8 {
     result
 }
 
-fn generate_random_coordinates() -> Vec<u8> {
+fn generate_random_coordinates(rng: &mut (dyn RngCore + '_)) -> Vec<u8> {
     let mut coords: Vec<u8> = (1..=255).collect();
-    let mut rng = thread_rng();
+    // let mut rng = thread_rng();
     
     // Fisher-Yates shuffle
     for i in (1..coords.len()).rev() {
@@ -134,7 +138,7 @@ fn generate_random_coordinates() -> Vec<u8> {
     coords
 }
 
-pub fn split(secret: &[u8], shares: usize, threshold: usize) -> Result<Vec<Vec<u8>>, ShamirError> {
+pub fn split(secret: &[u8], shares: usize, threshold: usize,rng: &mut (dyn RngCore + '_)) -> Result<Vec<Vec<u8>>, ShamirError> {
     // Validate inputs
     if shares < 2 || shares > 255 {
         return Err(ShamirError::InvalidShareCount);
@@ -150,7 +154,7 @@ pub fn split(secret: &[u8], shares: usize, threshold: usize) -> Result<Vec<Vec<u
     }
 
     let mut result = vec![vec![0u8; secret.len() + 1]; shares];
-    let x_coordinates = generate_random_coordinates();
+    let x_coordinates = generate_random_coordinates(rng);
     let degree = threshold - 1;
 
     // Set x-coordinates for each share
@@ -158,7 +162,7 @@ pub fn split(secret: &[u8], shares: usize, threshold: usize) -> Result<Vec<Vec<u
         result[i][secret.len()] = x_coordinates[i];
     }
 
-    let mut rng = thread_rng();
+    // let mut rng = thread_rng();
     
     // Generate and evaluate polynomial for each byte of the secret
     for (i, &byte) in secret.iter().enumerate() {
@@ -187,7 +191,7 @@ pub fn combine(shares: &[Vec<u8>]) -> Result<Vec<u8>, ShamirError> {
     }
 
     // Validate share lengths and uniqueness
-    let mut seen = std::collections::HashSet::new();
+    let mut seen = BTreeSet::new();
     for share in shares {
         if share.len() != share_len {
             return Err(ShamirError::InconsistentShareLength);
@@ -227,7 +231,7 @@ mod tests {
     #[test]
     fn test_split_and_combine() {
         let secret = b"Hello, World!";
-        let shares = split(secret, 5, 3).unwrap();
+        let shares = split(secret, 5, 3,&mut rand::thread_rng()).unwrap();
         let recovered = combine(&shares).unwrap();
         assert_eq!(secret, recovered.as_slice());
     }
@@ -235,7 +239,7 @@ mod tests {
     #[test]
     fn test_partial_recovery() {
         let secret = b"Hello, World!";
-        let shares = split(secret, 5, 3).unwrap();
+        let shares = split(secret, 5, 3,&mut rand::thread_rng()).unwrap();
         let partial_shares = shares[0..3].to_vec();
         let recovered = combine(&partial_shares).unwrap();
         assert_eq!(secret, recovered.as_slice());
