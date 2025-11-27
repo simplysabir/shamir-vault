@@ -22,6 +22,36 @@ shamir-vault = "1.2.0"
 
 For `no_std` environments, both dependencies will automatically work without their default features.
 
+## Rand Version Compatibility
+
+This crate works with both `rand` 0.8 and 0.9. The way you instantiate the RNG differs between versions:
+
+**For rand 0.8.x:**
+```rust
+use rand::thread_rng;
+
+let secret = b"My Super Secret Data";
+let shares = split(secret, 5, 3, &mut thread_rng()).unwrap();
+```
+
+**For rand 0.9.x:**
+```rust
+use rand::rng;
+
+let secret = b"My Super Secret Data";
+let shares = split(secret, 5, 3, &mut rng()).unwrap();
+```
+
+Alternatively with rand 0.9, you can also use:
+```rust
+use rand::thread_rng::thread_rng;
+
+let secret = b"My Super Secret Data";
+let shares = split(secret, 5, 3, &mut thread_rng()).unwrap();
+```
+
+The `split` function accepts any `&mut dyn RngCore`, so it's compatible with any version - just use the appropriate import for your `rand` version.
+
 ## Usage
 
 ### 1. Splitting a Secret
@@ -33,7 +63,8 @@ use shamir_vault::{split, combine};
 
 fn main() {
     let secret = b"My Super Secret Data";
-    let mut rng = rand::thread_rng();
+    // Use rand::thread_rng() for rand 0.8, or rand::rng() for rand 0.9
+    let mut rng = rand::thread_rng(); // or rand::rng() for 0.9+
     let shares = split(secret, 5, 3, &mut rng).expect("Failed to split secret");
     
     println!("Generated Shares:");
@@ -64,7 +95,8 @@ use shamir_vault::{split, combine};
 
 fn main() {
     let secret = b"My Super Secret Data";
-    let mut rng = rand::thread_rng();
+    // Use rand::thread_rng() for rand 0.8, or rand::rng() for rand 0.9
+    let mut rng = rand::thread_rng(); // or rand::rng() for 0.9+
     let shares = split(secret, 5, 3, &mut rng).expect("Failed to split secret");
     
     let recovered_secret = combine(&shares[0..3]).expect("Failed to reconstruct secret");
@@ -90,7 +122,8 @@ This crate provides robust error handling with the `ShamirError` enum.
 use shamir_vault::{split, ShamirError};
 
 fn main() {
-    let mut rng = rand::thread_rng();
+    // Use rand::thread_rng() for rand 0.8, or rand::rng() for rand 0.9
+    let mut rng = rand::thread_rng(); // or rand::rng() for 0.9+
     match split(b"", 5, 3, &mut rng) {
         Ok(_) => println!("Secret successfully split"),
         Err(ShamirError::EmptySecret) => println!("Secret cannot be empty"),
