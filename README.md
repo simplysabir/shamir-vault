@@ -17,7 +17,7 @@ Add `shamir-vault` to your `Cargo.toml` dependencies:
 
 ```toml
 [dependencies]
-shamir-vault = "1.2.0"
+shamir-vault = "1.3.0"
 ```
 
 For `no_std` environments, both dependencies will automatically work without their default features.
