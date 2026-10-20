@@ -4,7 +4,6 @@ use alloc::{collections::btree_set::BTreeSet, vec};
 use alloc::vec::Vec;
 use rand::{ RngCore};
 use thiserror::Error;
-use core as std;
 #[derive(Debug, Error)]
 pub enum ShamirError {
     #[error("shares must be between 2 and 255")]
